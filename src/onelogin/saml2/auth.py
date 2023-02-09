@@ -394,7 +394,10 @@ class OneLogin_Saml2_Auth(object):
         """
         return self._last_response_in_response_to
 
-    def login(self, return_to=None, force_authn=False, is_passive=False, set_nameid_policy=True, name_id_value_req=None):
+    def login(
+        self, return_to=None, force_authn=False, is_passive=False, set_nameid_policy=True, name_id_value_req=None,
+        deflate=False
+    ):
         """
         Initiates the SSO process.
 
@@ -413,6 +416,9 @@ class OneLogin_Saml2_Auth(object):
         :param name_id_value_req: Optional argument. Indicates to the IdP the subject that should be authenticated
         :type name_id_value_req: string
 
+        :param deflate: Optional argument. When true, compress request
+        :type deflate: bool
+
         :returns: Redirection URL
         :rtype: string
         """
@@ -420,7 +426,7 @@ class OneLogin_Saml2_Auth(object):
         self._last_request = authn_request.get_xml()
         self._last_request_id = authn_request.get_id()
 
-        saml_request = authn_request.get_request()
+        saml_request = authn_request.get_request(deflate)
         parameters = {'SAMLRequest': saml_request}
 
         if return_to is not None:
